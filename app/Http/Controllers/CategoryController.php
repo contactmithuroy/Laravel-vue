@@ -79,7 +79,13 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        // $category = Category::where('slug',$slug)->first();
+        if($category){
+            return response()->json($category, 200);
+           
+        }else{
+            return response()->json(['failed',404]);
+        }
     }
 
     /**
@@ -91,7 +97,23 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $this->validate($request,[
+            'name'=>"required|unique:categories,name,$category->id",
+        ]);
+        $category->name = ucfirst($request->name);
+        $category->slug = Str::slug($request->name,'-');
+        if(Category::whereSlug($category->slug)->exists()){
+            $category->slug = "{$category->slug}_".rand(0,500);
+        }
+        if(($request->status) == true){
+            $category->status = 1;  
+        }else{
+            $category->status = 0; 
+        }
+
+        $category->save();
+        // return response()->json('success',200);
+        return response()->json(['massage'=>$category, 'status'=>$request->status]);
     }
 
     /**
@@ -102,6 +124,12 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        if($category){
+            $category->delete();
+            return response()->json('success',200);
+        }else{
+            return response()->json('failed',404);
+        }
     }
+
 }
