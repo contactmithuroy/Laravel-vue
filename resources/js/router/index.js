@@ -7,6 +7,11 @@ import Category from '../pages/category/index.vue'
 import CreateCategory from '../pages/category/create.vue'
 import EditCategory from '../pages/category/edit.vue'
 
+import Product from '../pages/product/index.vue'
+import CreateProduct from '../pages/product/create.vue'
+import EditProduct from '../pages/product/edit.vue'
+
+
 const routes = new VueRouter({
 	mode:'history',
 	routes: [
@@ -29,6 +34,21 @@ const routes = new VueRouter({
 			path : '/category/edit/:id',
 			component : EditCategory,
 			name : 'edit-category',
+		},
+		{
+			path : '/product',
+			component : Product,
+			name : 'product-list',
+		},
+		{
+			path : '/product/create',
+			component : CreateProduct,
+			name : 'create-product',
+		},
+		{
+			path : '/product/edit/:id',
+			component : EditProduct,
+			name : 'edit-product',
 		},
 		
 	]

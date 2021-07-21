@@ -49,7 +49,7 @@ class CategoryController extends Controller
         if(Category::whereSlug($category->slug)->exists()){
             $category->slug = "{$category->slug}_".rand(0,500);
         }
-        if(isset($request->status)){
+        if(($request->status) == true){
             $category->status =1;  
         }else{
             $category->status =0; 
