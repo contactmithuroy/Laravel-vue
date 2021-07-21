@@ -3,8 +3,8 @@
       <div class="row">
           <div class="col-md-12">
               <div class="card-header d-flex justify-content-between align-item-center">
-                  <h5>Create Category</h5>
-                <router-link :to="{name:'category-list'}" class="btn btn-primary btn-sm">Category List</router-link>
+                  <h5>Create Product</h5>
+                <router-link :to="{name:'product-list'}" class="btn btn-primary btn-sm">Product List</router-link>
               </div>
                <!-- /.card-header -->
             <div class="card-body p-0">
@@ -12,23 +12,58 @@
                     <div class="row">
                         <div class="col-12 col-lg-6 col-md-8 offset-lg-3 offset-md-2">
                             <!-- form start -->
-                            <form role="form" @submit.prevent="createCategory">
-                              
-                                <!-- <div class="alert alert-success success_alt mt-3 hide" role="alert" id="s_message">
-                                    Your Data has been submit successfully!
-                                </div> -->
+                            <form role="form" @submit.prevent="createProduct">
                                 <div class="row mt-5">
                                     <div class="col-md-10">
                                         <div class="form-group">
-                                            <label for="name">Category Name</label>
-                                            <input type="name"  v-model="categoryForm.name" name="name" class="form-control" id="name" :class="{'is-invalid': categoryForm.errors.has('name')}" placeholder="Enter name">
-                                            <!-- <div v-if="categoryForm.errors.has('name')" v-html="categoryForm.errors.get('name')" /> -->
-                                            <!-- <has-error :form="categoryForm" field="name"> </has-error> -->
+                                            <label for="title">Title</label>
+                                            <input type="title"  v-model="productForm.title" name="title" class="form-control" id="title" :class="{'is-invalid': productForm.errors.has('title')}" placeholder="Enter title">
                                         </div>
                                     </div>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <label for="price">Price</label>
+                                            <input type="price"  v-model="productForm.price" name="price" class="form-control" id="price" :class="{'is-invalid': productForm.errors.has('price')}" placeholder="Enter price">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                        <label for="category_id">Category</label>
+                                        <select v-model="productForm.category_id" name="category_id" id="category_id" :class="{'is-invalid': productForm.errors.has('category_id')}" class="form-control" >
+                                            <option value="" style="display: none" selected >Please select</option>
+                                            <option value="1">Data</option>
+                                            <option value="1">Data</option>
+                                            <option value="1">Data</option>
+                                            <option value="1">Data</option>
+                                            <!-- @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach -->
+                                        </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                           <label for="Image">Image</label>
+                                           <div class="input-group">
+                                              <div class="custom-file">
+                                                 <input type="file" @change="onImageChange" name="image" class="custom-file-input" id="Image">
+                                                 <label class="custom-file-label" for="Image">Choose Image</label>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     </div>
+                                     <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea v-model="productForm.description" :class="{'is-invalid': productForm.errors.has('description')}"  name="description"  id="description" rows="4" class="form-control" placeholder="Enter your description">
+                                            
+                                            </textarea>
+                                        </div>
+                                    </div>   
+
                                     <div class="col-md-8">
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input" v-model="categoryForm.status" name="status" type="checkbox" id="status" >
+                                            <input class="form-check-input" v-model="productForm.status" name="status" type="checkbox" id="status" >
                                             <label class="form-check-label" for="status">Is show your home page?</label>
                                           
                                         </div>
@@ -51,25 +86,39 @@
 
 <script>
 import Form from 'vform'
+import{objectToFormData} from 'object-to-formData'
 export default {
     data(){
        return{
-           categoryForm: new Form({
-                name:'',
+           productForm: new Form({
+                title:'',
+                price:'',
+                category_id:'',
+                image:'',
+                description:'',
                 status:'',
             }),  
        }     
     },
     methods:{
-        createCategory(){
-            this.categoryForm.post('/api/category')
-            .then(({data})=>{
+        createProduct(){
+            this.productForm.post('/api/product',{
+                transformRequest:[function(data, headers){
+                    return objectToFormData(data)
+                }],
+                onUploadProgress: e =>{
+                    console.log(e)
+                }
+            }).then(({data})=>{
                 console.log(data);
-                this.categoryForm.name = '';
-                this.categoryForm.status = false;
+                this.productForm.name = '';
+                this.productForm.price = '';
+                this.productForm.category_id = '';
+                this.productForm.description = '';
+                this.productForm.status = false;
                 this.$swal.fire(
                     'Done!',
-                    'Category Create Successfully!',
+                    'product Create Successfully!',
                     'success'
                 );      
             }).catch(() =>{
@@ -81,6 +130,11 @@ export default {
             });
             console.log('form submited');
         },
+
+        onImageChange(e){
+            const file = e.target.files[0]
+            this.productForm.image = file
+        }
 
     }
 }
