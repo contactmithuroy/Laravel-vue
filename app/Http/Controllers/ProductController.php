@@ -152,6 +152,14 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        if($product){
+            if(file_exists(public_path($product->image))){ //if have this type of path has exiting
+                unlink(public_path("{$product->image}")); // have exiting then delete this file
+            }
+            $product->delete();
+            return response()->json('success',200);
+        }else{
+            return response()->json('failed',404);
+        }
     }
 }
