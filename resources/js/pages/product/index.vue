@@ -17,6 +17,7 @@
                                     <th style="max-width:200px">Title</th>
                                     <th>User</th>
                                     <th>Price</th>
+                                    <th>Category</th>
                                     <th>Status</th>
                                     <th style="width:170px">Action</th>
                                 </tr>
@@ -26,12 +27,13 @@
                                     <td style="width:100px">{{product.id }}</td>
                                     <td>
                                         <div style="max-width:70px; max-height:70px; over-flow:hidden">
-                                            <img src="product.image" class="img-fluid">
+                                            <img :src="product.image" class="img-fluid">
                                         </div> 
                                     </td>
                                     <td>{{product.title }}</td>
                                     <td>{{product.user }}</td>
                                     <td>{{product.price }}</td>
+                                    <td>{{product.category.name}}</td>
                                     <td>
                                         <span v-if="product.status == 1" class="badge badge-success">Open</span>
                                         <span v-else class="badge badge-warning">Lock</span>

@@ -31,10 +31,7 @@
                                         <label for="category_id">Category</label>
                                         <select v-model="productForm.category_id" name="category_id" id="category_id" :class="{'is-invalid': productForm.errors.has('category_id')}" class="form-control" >
                                             <option value="" style="display: none" selected >Please select</option>
-                                            <option value="1">Data</option>
-                                            <option value="1">Data</option>
-                                            <option value="1">Data</option>
-                                            <option value="1">Data</option>
+                                            <option v-for="category in categories" :key="category.id" :value="category.id">{{category.name}}</option>
                                             <!-- @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach -->
@@ -96,11 +93,19 @@ export default {
                 category_id:'',
                 image:'',
                 description:'',
-                status:'',
-            }),  
+                status:0,
+            }),
+            categories:[],  
        }     
     },
     methods:{
+        loadCategory(){
+            axios.get('/api/product/create')
+            .then(response =>{
+                console.log(response);
+                this.categories = response.data;
+            });
+        },
         createProduct(){
             this.productForm.post('/api/product',{
                 transformRequest:[function(data, headers){
@@ -111,7 +116,7 @@ export default {
                 }
             }).then(({data})=>{
                 console.log(data);
-                this.productForm.name = '';
+                this.productForm.title = '';
                 this.productForm.price = '';
                 this.productForm.category_id = '';
                 this.productForm.description = '';
@@ -120,13 +125,7 @@ export default {
                     'Done!',
                     'product Create Successfully!',
                     'success'
-                );      
-            }).catch(() =>{
-                this.$Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    });
+                );         
             });
             console.log('form submited');
         },
@@ -134,9 +133,13 @@ export default {
         onImageChange(e){
             const file = e.target.files[0]
             this.productForm.image = file
-        }
+        },
 
-    }
+    },
+
+        mounted(){
+        this.loadCategory();
+        }
 }
 </script>
 

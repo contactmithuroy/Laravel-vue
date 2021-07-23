@@ -18,7 +18,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->get();
+        $products = Product::with('category')->latest()->get();
         return response()->json($products,200);
     }
 
@@ -29,7 +29,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::where('status',1)->latest()->get();
+        return response()->json($categories,200);
     }
 
     /**
@@ -50,20 +51,19 @@ class ProductController extends Controller
 
         $product = new Product();
         $product->title = $request->title;
-        $product->category_id = 1;
+        $product->category_id = $request->category_id;
         $product->price = $request->price;
         $product->description = $request->description;
-        $product->image = 'image';
         // $product->user = Auth::user()->id;
         $product->user = 1;
         $product->slug = Str::slug($request->title,'-');
         if(Product::whereSlug($product->slug)->exists()){
             $product->slug = "{$product->slug}_".rand(0,500);
         }
-        if(($request->status) == true){
-            $product->status =1;  
+        if((($request->status) == '') || (($request->status) == false) || (($request->status) == 0) ){
+            $product->status =0;  
         }else{
-            $category->status =0; 
+            $product->status =1; 
         }
         if($request->image){
             $imageName = time().'-'.uniqid().'.'.$request->image->getClientOriginalExtension();
@@ -93,7 +93,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $categories = Category::where('status',1)->latest()->get();
+        return response()->json([$product,$categories,200]);
     }
 
     /**
@@ -105,7 +106,42 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        // return response()->json(['success','product'=>$request->all(),200]);
+        // die();
+        $this->validate($request,[
+            'title'=>'required|max:255',
+            'category_id'=>'required',
+            'price'=>'required|integer',
+            // 'image'=>'sometime|nullable|image|max:2048',
+            'description'=>'required',
+        ]);
+
+        $product->title = $request->title;
+        $product->category_id = $request->category_id;
+        $product->price = $request->price;
+        $product->description = $request->description;
+        // $product->user = Auth::user()->id;
+        $product->user = 1;
+        $product->slug = Str::slug($request->title,'-');
+        if(Product::whereSlug($product->slug)->exists()){
+            $product->slug = "{$product->slug}_".rand(0,500);
+        }
+        if( (isset($request->status)) ){
+            $product->status =1;
+        }else{
+            $product->status =0; 
+        }
+
+        if($request->image){
+            if(file_exists(public_path($product->image))){ //if have this type of path has exiting
+                unlink(public_path("{$product->image}")); // have exiting then delete this file
+            }
+            $imageName = time().'-'.uniqid().'.'.$request->image->getClientOriginalExtension();
+            $request->image->move(public_path('storage/product/'),$imageName);
+            $product->image = '/storage/product/'.$imageName;
+        }
+        $product->save();
+        return response()->json(['success','product'=>$product,'status'=>$request->status,200]);
     }
 
     /**
