@@ -10,7 +10,9 @@
         <router-link class="nav-item nav-link text-white" :to="{name:'home'}">Home <span class="sr-only">(current)</span></router-link>
         <router-link class="nav-item nav-link text-white" :to="{name:'category-list'}">Category</router-link>
         <router-link class="nav-item nav-link text-white" :to="{name:'product-list'}">Product</router-link>
-        <a class="nav-item nav-link" href="#" style="color:red">Pricing</a>
+        <router-link class="nav-item nav-link text-white" :to="{name:'login'}">Login</router-link>
+        <a href="javascrip:void(0)" class="nav-item nav-link text-white" @click.prevent="logout">Logout</a>
+        
         </div>
     </div>
   </div>
@@ -18,8 +20,21 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-
+    methods:{
+      logout(){
+        axios.post('/logout').then(response =>{
+          this.$router.push({name:'home'})
+          console.log('success');
+          this.$swal.fire(
+                    'Success!',
+                    'You are Logout Successfully!',
+                    'success'
+                ); 
+        });
+      }
+    }
 }
 </script>
 

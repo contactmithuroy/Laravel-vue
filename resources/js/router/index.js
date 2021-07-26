@@ -11,6 +11,11 @@ import Product from '../pages/product/index.vue'
 import CreateProduct from '../pages/product/create.vue'
 import EditProduct from '../pages/product/edit.vue'
 
+// Authentication file
+import Login from '../pages/auth/login.vue'
+// Dashboard file
+import Dashboard from '../pages/dashboard/index.vue'
+
 
 const routes = new VueRouter({
 	mode:'history',
@@ -49,6 +54,18 @@ const routes = new VueRouter({
 			path : '/product/edit/:id',
 			component : EditProduct,
 			name : 'edit-product',
+		},
+		// Authentication Route
+		{
+			path : '/auth/login',
+			component : Login,
+			name : 'login',
+		},  
+
+		{
+			path : '/dashboard',
+			component : Dashboard,
+			name : 'dashboard',
 		},
 		
 	]
