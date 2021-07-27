@@ -2352,6 +2352,7 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.$store.commit('SET_AUTHENTICATED', false);
 
+        localStorage.removeItem('auth');
         console.log('success');
 
         _this.$swal.fire('Success!', 'You are Logout Successfully!', 'success');

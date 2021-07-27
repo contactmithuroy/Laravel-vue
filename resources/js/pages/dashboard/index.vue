@@ -35,6 +35,7 @@ export default {
         axios.post('/logout').then(response =>{
           this.$router.push({name:'login'})
           this.$store.commit('SET_AUTHENTICATED',false);
+          localStorage.removeItem('auth');
 
           
           console.log('success');
