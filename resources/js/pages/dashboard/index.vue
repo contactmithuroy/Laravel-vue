@@ -3,12 +3,14 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="card-header">
-                        <h4>Dashboard</h4>
+                        <router-link :to="{name:'dashboard'}" class="list-group-item-action"><h4>Dashboard</h4></router-link>
                     </div>
                 <div class="list-group text-white bg-dark">
-                <a href="#" class="list-group-item list-group-item-action">A second link item</a>
-                <a href="#" class="list-group-item list-group-item-action">A third link item</a>
-                <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
+                <router-link :to="{name:'dashboard'}" class="list-group-item list-group-item-action">Home</router-link>
+                <router-link :to="{name:'user-profile'}" class="list-group-item list-group-item-action">User Profile</router-link>
+                <router-link :to="{name:'product-list'}" class="list-group-item list-group-item-action">Product</router-link>
+                <router-link :to="{name:'category-list'}" class="list-group-item list-group-item-action">Category</router-link>
+
                 <a href="javascrip:void(0)" class="list-group-item list-group-item-action" @click.prevent="logout">Logout</a>
                 </div>
             </div>

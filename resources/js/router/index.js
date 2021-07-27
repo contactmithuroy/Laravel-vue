@@ -15,6 +15,7 @@ import EditProduct from '../pages/product/edit.vue'
 import Login from '../pages/auth/login.vue'
 // Dashboard file
 import Dashboard from '../pages/dashboard/index.vue'
+import UserProfile from '../pages/dashboard/profile.vue'
 
 
 const routes = new VueRouter({
@@ -69,6 +70,14 @@ const routes = new VueRouter({
 			path : '/dashboard',
 			component : Dashboard,
 			name : 'dashboard',
+			meta:{
+				requiresAuth:true,
+			}
+		},
+		{
+			path : '/dashboard/profile',
+			component : UserProfile,
+			name : 'user-profile',
 			meta:{
 				requiresAuth:true,
 			}

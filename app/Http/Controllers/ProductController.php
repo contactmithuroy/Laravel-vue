@@ -54,8 +54,8 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->price = $request->price;
         $product->description = $request->description;
-        // $product->user = Auth::user()->id;
-        $product->user = 1;
+        $product->user = auth()->user()->id;
+        // $product->user = 1;
         $product->slug = Str::slug($request->title,'-');
         if(Product::whereSlug($product->slug)->exists()){
             $product->slug = "{$product->slug}_".rand(0,500);
@@ -120,8 +120,8 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->price = $request->price;
         $product->description = $request->description;
-        // $product->user = Auth::user()->id;
-        $product->user = 1;
+        $product->user = auth()->user()->id;
+        // $product->user = 1;
         $product->slug = Str::slug($request->title,'-');
         if(Product::whereSlug($product->slug)->exists()){
             $product->slug = "{$product->slug}_".rand(0,500);
