@@ -70,7 +70,11 @@ export default {
             axios.get('/api/user').then(response =>{
                 console.log(response.data);
                 let user = response.data;
-                this.$store.commit('SET_USER', user)
+                this.$store.commit('SET_USER', user);
+                this.$store.commit('SET_AUTHENTICATED',true);
+
+                // set data on local storage
+                localStorage.setItem('auth',true);
             });
         },
     },
@@ -86,8 +90,4 @@ export default {
 </style>
 
 
-<!-- this.$swal.fire(
-                    'Welcome!',
-                    'Login Successfully!',
-                    'success'
-                ); --!>
+<!--  --!>

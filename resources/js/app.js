@@ -29,9 +29,23 @@ Vue.use(VueSweetalert2);
 
 Vue.component('app-header', require('./components/header.vue').default);
 
-const app = new Vue({
-    el: '#app',
-    router:routes,
-    store,
-});
+// check authentication
+let auth = localStorage.getItem("auth");
+console.log(auth);
+if(auth){
+    store.dispatch('authUser').then(() => {
+        const app = new Vue({
+            el: '#app',
+            router:routes,
+            store,
+        });
+    });
+}else {
+    const app = new Vue({
+        el: '#app',
+        router:routes,
+        store,
+    });
+}
+
  

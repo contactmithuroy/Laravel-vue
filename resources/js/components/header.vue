@@ -8,11 +8,10 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav ml-auto">
         <router-link class="nav-item nav-link text-white" :to="{name:'home'}">Home <span class="sr-only">(current)</span></router-link>
+        <router-link class="nav-item nav-link text-white" v-if="auth" :to="{name:'dashboard'}">Dashboard</router-link>
         <router-link class="nav-item nav-link text-white" :to="{name:'category-list'}">Category</router-link>
         <router-link class="nav-item nav-link text-white" :to="{name:'product-list'}">Product</router-link>
-        <router-link class="nav-item nav-link text-white" :to="{name:'login'}">Login</router-link>
-        <a href="javascrip:void(0)" class="nav-item nav-link text-white" @click.prevent="logout">Logout</a>
-        
+        <router-link class="nav-item nav-link text-white" v-if="!auth" :to="{name:'login'}">Login</router-link>        
         </div>
     </div>
   </div>
@@ -33,6 +32,11 @@ export default {
                     'success'
                 ); 
         });
+      }
+    },
+    computed:{
+      auth(){
+        return this.$store.getters.getAuthenticated;
       }
     }
 }

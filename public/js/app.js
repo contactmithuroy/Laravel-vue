@@ -1867,7 +1867,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   methods: {
@@ -1883,6 +1882,11 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.$swal.fire('Success!', 'You are Logout Successfully!', 'success');
       });
+    }
+  },
+  computed: {
+    auth: function auth() {
+      return this.$store.getters.getAuthenticated;
     }
   }
 });
@@ -1975,6 +1979,11 @@ __webpack_require__.r(__webpack_exports__);
         var user = response.data;
 
         _this2.$store.commit('SET_USER', user);
+
+        _this2.$store.commit('SET_AUTHENTICATED', true); // set data on local storage
+
+
+        localStorage.setItem('auth', true);
       });
     }
   },
@@ -2321,7 +2330,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  methods: {
+    logout: function logout() {
+      var _this = this;
+
+      axios.post('/logout').then(function (response) {
+        _this.$router.push({
+          name: 'login'
+        });
+
+        _this.$store.commit('SET_AUTHENTICATED', false);
+
+        console.log('success');
+
+        _this.$swal.fire('Success!', 'You are Logout Successfully!', 'success');
+      });
+    }
+  },
   computed: {
     massage: function massage() {
       return this.$store.getters.getMassage;
@@ -2845,12 +2881,26 @@ var toastrConfigs = _defineProperty({
 
 
 vue__WEBPACK_IMPORTED_MODULE_7__.default.use((vue_sweetalert2__WEBPACK_IMPORTED_MODULE_5___default()));
-vue__WEBPACK_IMPORTED_MODULE_7__.default.component('app-header', __webpack_require__(/*! ./components/header.vue */ "./resources/js/components/header.vue").default);
-var app = new vue__WEBPACK_IMPORTED_MODULE_7__.default({
-  el: '#app',
-  router: _router_index__WEBPACK_IMPORTED_MODULE_0__.default,
-  store: _store_index__WEBPACK_IMPORTED_MODULE_1__.default
-});
+vue__WEBPACK_IMPORTED_MODULE_7__.default.component('app-header', __webpack_require__(/*! ./components/header.vue */ "./resources/js/components/header.vue").default); // check authentication
+
+var auth = localStorage.getItem("auth");
+console.log(auth);
+
+if (auth) {
+  _store_index__WEBPACK_IMPORTED_MODULE_1__.default.dispatch('authUser').then(function () {
+    var app = new vue__WEBPACK_IMPORTED_MODULE_7__.default({
+      el: '#app',
+      router: _router_index__WEBPACK_IMPORTED_MODULE_0__.default,
+      store: _store_index__WEBPACK_IMPORTED_MODULE_1__.default
+    });
+  });
+} else {
+  var app = new vue__WEBPACK_IMPORTED_MODULE_7__.default({
+    el: '#app',
+    router: _router_index__WEBPACK_IMPORTED_MODULE_0__.default,
+    store: _store_index__WEBPACK_IMPORTED_MODULE_1__.default
+  });
+}
 
 /***/ }),
 
@@ -2972,13 +3022,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _router_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../router/index */ "./resources/js/router/index.js");
 
 
 vue__WEBPACK_IMPORTED_MODULE_0__.default.use(vuex__WEBPACK_IMPORTED_MODULE_1__.default);
+
 var store = new vuex__WEBPACK_IMPORTED_MODULE_1__.default.Store({
   state: {
     massage: "Welcome, People",
-    user: []
+    user: [],
+    authenticated: false
   },
   getters: {
     getMassage: function getMassage(state) {
@@ -2986,16 +3039,54 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__.default.Store({
     },
     getUser: function getUser(state) {
       return state.user;
+    },
+    getAuthenticated: function getAuthenticated(state) {
+      return state.authenticated;
     }
   },
   mutations: {
     SET_USER: function SET_USER(state, data) {
       state.user = data;
+    },
+    SET_AUTHENTICATED: function SET_AUTHENTICATED(state, data) {
+      state.authenticated = data;
+    }
+  },
+  actions: {
+    authUser: function authUser(_ref) {
+      var commit = _ref.commit,
+          dispatch = _ref.dispatch;
+      return axios.get('/api/user').then(function (response) {
+        commit('SET_AUTHENTICATED', true);
+        commit('SET_USER', response.data);
+        localStorage.setItem("auth", true);
+
+        if (_router_index__WEBPACK_IMPORTED_MODULE_2__.default.currentRoute.name !== null) {
+          _router_index__WEBPACK_IMPORTED_MODULE_2__.default.push({
+            name: 'dashboard'
+          });
+        }
+
+        ;
+      })["catch"](function () {
+        commit('SET_AUTHENTICATED', false);
+        commit('SET_USER', null);
+        localStorage.removeItem("auth");
+
+        if (_router_index__WEBPACK_IMPORTED_MODULE_2__.default.currentRoute.name !== 'login') {
+          _router_index__WEBPACK_IMPORTED_MODULE_2__.default.push({
+            name: 'login'
+          });
+        }
+
+        ;
+      });
     }
   }
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store); // state data seen to using getters and also using getMassage() function
 // mutations set data into state and then this data return on getters function;
+// auth(login)->mutations(SET_USER)->state(user)->gutters(getUser)->dashboard(index)
 
 /***/ }),
 
@@ -39670,6 +39761,17 @@ var render = function() {
                     ]
                   ),
                   _vm._v(" "),
+                  _vm.auth
+                    ? _c(
+                        "router-link",
+                        {
+                          staticClass: "nav-item nav-link text-white",
+                          attrs: { to: { name: "dashboard" } }
+                        },
+                        [_vm._v("Dashboard")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
                   _c(
                     "router-link",
                     {
@@ -39688,29 +39790,16 @@ var render = function() {
                     [_vm._v("Product")]
                   ),
                   _vm._v(" "),
-                  _c(
-                    "router-link",
-                    {
-                      staticClass: "nav-item nav-link text-white",
-                      attrs: { to: { name: "login" } }
-                    },
-                    [_vm._v("Login")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "a",
-                    {
-                      staticClass: "nav-item nav-link text-white",
-                      attrs: { href: "javascrip:void(0)" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.logout.apply(null, arguments)
-                        }
-                      }
-                    },
-                    [_vm._v("Logout")]
-                  )
+                  !_vm.auth
+                    ? _c(
+                        "router-link",
+                        {
+                          staticClass: "nav-item nav-link text-white",
+                          attrs: { to: { name: "login" } }
+                        },
+                        [_vm._v("Login")]
+                      )
+                    : _vm._e()
                 ],
                 1
               )
@@ -40499,11 +40588,59 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
+  return _c("div", { staticClass: "container-fluid" }, [
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-12" }, [
+      _c("div", { staticClass: "col-md-2" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "list-group text-white bg-dark" }, [
+          _c(
+            "a",
+            {
+              staticClass: "list-group-item list-group-item-action",
+              attrs: { href: "#" }
+            },
+            [_vm._v("A second link item")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "list-group-item list-group-item-action",
+              attrs: { href: "#" }
+            },
+            [_vm._v("A third link item")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "list-group-item list-group-item-action",
+              attrs: { href: "#" }
+            },
+            [_vm._v("A fourth link item")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "list-group-item list-group-item-action",
+              attrs: { href: "javascrip:void(0)" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.logout.apply(null, arguments)
+                }
+              }
+            },
+            [_vm._v("Logout")]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-10" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(0),
+          _vm._m(1),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c("h5", [_vm._v(_vm._s(_vm.massage))]),
@@ -40524,6 +40661,14 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h4", [_vm._v("Dashboard")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h4", [_vm._v("Content")])
     ])
   }
 ]
