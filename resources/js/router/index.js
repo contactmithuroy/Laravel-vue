@@ -60,12 +60,18 @@ const routes = new VueRouter({
 			path : '/auth/login',
 			component : Login,
 			name : 'login',
+			meta:{
+				requiresVisitor:true,
+			}
 		},  
 
 		{
 			path : '/dashboard',
 			component : Dashboard,
 			name : 'dashboard',
+			meta:{
+				requiresAuth:true,
+			}
 		},
 		
 	]

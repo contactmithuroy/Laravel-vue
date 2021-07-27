@@ -52,10 +52,10 @@ export default {
             axios.get('/sanctum/csrf-cookie').then(response => {
                 this.loginForm.post('/login').then(response =>{
                     console.log(response); 
-
+                    this.$router.push({name:'dashboard'});
                      this.getUserData();
 
-                    this.$router.push({name:'dashboard'});
+                     
                     this.$swal.fire(
                     'Success!',
                     'You are Login Successfully!',

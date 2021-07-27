@@ -1875,7 +1875,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default().post('/logout').then(function (response) {
         _this.$router.push({
-          name: 'home'
+          name: 'login'
         });
 
         console.log('success');
@@ -1961,11 +1961,11 @@ __webpack_require__.r(__webpack_exports__);
         _this.loginForm.post('/login').then(function (response) {
           console.log(response);
 
-          _this.getUserData();
-
           _this.$router.push({
             name: 'dashboard'
           });
+
+          _this.getUserData();
 
           _this.$swal.fire('Success!', 'You are Login Successfully!', 'success');
         });
@@ -2882,7 +2882,41 @@ var toastrConfigs = _defineProperty({
 
 
 vue__WEBPACK_IMPORTED_MODULE_7__.default.use((vue_sweetalert2__WEBPACK_IMPORTED_MODULE_5___default()));
-vue__WEBPACK_IMPORTED_MODULE_7__.default.component('app-header', __webpack_require__(/*! ./components/header.vue */ "./resources/js/components/header.vue").default); // check authentication
+vue__WEBPACK_IMPORTED_MODULE_7__.default.component('app-header', __webpack_require__(/*! ./components/header.vue */ "./resources/js/components/header.vue").default); //Nagivation Gard Authentication
+
+function isLoggedIn() {
+  return _store_index__WEBPACK_IMPORTED_MODULE_1__.default.getters.getAuthenticated;
+}
+
+_router_index__WEBPACK_IMPORTED_MODULE_0__.default.beforeEach(function (to, from, next) {
+  if (to.matched.some(function (record) {
+    return record.meta.requiresAuth;
+  })) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!isLoggedIn()) {
+      next({
+        name: 'login'
+      });
+    } else {
+      next();
+    }
+  } else if (to.matched.some(function (record) {
+    return record.meta.requiresVisitor;
+  })) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (isLoggedIn()) {
+      next({
+        name: 'dashboard'
+      });
+    } else {
+      next();
+    }
+  } else {
+    next(); // make sure to always call next()!
+  }
+}); // check authentication
 
 var auth = localStorage.getItem("auth");
 console.log(auth);
@@ -2999,11 +3033,17 @@ var routes = new vue_router__WEBPACK_IMPORTED_MODULE_1__.default({
   {
     path: '/auth/login',
     component: _pages_auth_login_vue__WEBPACK_IMPORTED_MODULE_9__.default,
-    name: 'login'
+    name: 'login',
+    meta: {
+      requiresVisitor: true
+    }
   }, {
     path: '/dashboard',
     component: _pages_dashboard_index_vue__WEBPACK_IMPORTED_MODULE_10__.default,
-    name: 'dashboard'
+    name: 'dashboard',
+    meta: {
+      requiresAuth: true
+    }
   }]
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (routes);

@@ -24,7 +24,7 @@ export default {
     methods:{
       logout(){
         axios.post('/logout').then(response =>{
-          this.$router.push({name:'home'})
+          this.$router.push({name:'login'})
           console.log('success');
           this.$swal.fire(
                     'Success!',
