@@ -33,12 +33,12 @@
                     </div>
                     <!-- card body -->
                     <div class="card-body">
-                        <div class="row d-flex justify-content-center mt-50 mb-50">
+                        <div v-if="apiCallLoaded" class="row  d-flex justify-content-center mt-50 mb-50">
                             <!-- products -->
                             <div v-for="product in products" :key="product.id" class="col-md-4 mt-2">
                                 <div class="card">
                                     <div class="card-body">
-                                        <div class="card-img-actions"> <img :src="product.image" class="card-img img-fluid" width="96" height="350" alt=""> </div>
+                                        <div class="card-img-actions"> <img :src="product.image" class="card-img img-fluid" width="96" height="350" style="object-fit:cover; overflow:hidden" alt=""> </div>
                                     </div>
                                     <div class="card-body bg-light text-center">
                                         <div class="mb-2">
@@ -55,8 +55,12 @@
                                     </div>
                                 </div>
                             </div>
+                             <div v-if="apiCallLoaded" class="text-center mt-5">
+                                <button :disabled="!next_page_url" @click.prevent="loadMoreProduct(next_page_url)" class="btn btn-warning">Load More</button>
+                             </div>
                             <!-- end product -->
-                        </div>
+
+                         </div>
                     </div>
                 </div>
             </div>
@@ -65,18 +69,32 @@
 </template>
 
 <script>
+
 import axios from 'axios';
 export default {
     data(){
         return{
             products:[],
+            next_page_url:null,
+            apiCallLoaded:false,
         }
     },
     methods:{
         async loadProduct(){
-            let {data} = await axios.get('/api/products');
+            let {data} = await axios.get('/api/products'); // data load using api
             console.log(data);
-            this.products = data.data;
+            this.products = data.data; //api json data set
+            this.next_page_url = data.next_page_url; // this next_page_url is api url, see on consol data
+            this.apiCallLoaded = true; // if apiCallLoaded is true then product are lode
+        },
+
+        async loadMoreProduct(url){ //this parameter url valu is next_page_url valu 
+            let {data} = await axios.get(url);
+            let products = data.data; // new product value
+            products.forEach(element =>{
+                this.products.push(element); // new products data push on products array
+            });
+            this.next_page_url = data.next_page_url; // if have more next_page_url then set on 
         },
         async logout(){
             await axios.post('/logout');

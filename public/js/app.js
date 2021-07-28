@@ -2586,11 +2586,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      products: []
+      products: [],
+      next_page_url: null,
+      apiCallLoaded: false
     };
   },
   methods: {
@@ -2610,10 +2616,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 2:
                 _yield$axios$get = _context.sent;
                 data = _yield$axios$get.data;
+                // data load using api
                 console.log(data);
-                _this.products = data.data;
+                _this.products = data.data; //api json data set
 
-              case 6:
+                _this.next_page_url = data.next_page_url; // this next_page_url is api url, see on consol data
+
+                _this.apiCallLoaded = true; // if apiCallLoaded is true then product are lode
+
+              case 8:
               case "end":
                 return _context.stop();
             }
@@ -2621,29 +2632,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    logout: function logout() {
+    loadMoreProduct: function loadMoreProduct(url) {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var _yield$axios$get2, data, products;
+
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/logout');
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get(url);
 
               case 2:
-                _context2.next = 4;
-                return _this2.$store.commit('SET_AUTHENTICATED', false);
+                _yield$axios$get2 = _context2.sent;
+                data = _yield$axios$get2.data;
+                products = data.data; // new product value
 
-              case 4:
-                localStorage.removeItem('auth');
+                products.forEach(function (element) {
+                  _this2.products.push(element); // new products data push on products array
 
-                _this2.$router.push({
-                  name: 'login'
                 });
-
-                _this2.$swal.fire('Success!', 'You are Logout Successfully!', 'success');
+                _this2.next_page_url = data.next_page_url; // if have more next_page_url then set on 
 
               case 7:
               case "end":
@@ -2651,6 +2662,38 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee2);
+      }))();
+    },
+    logout: function logout() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().post('/logout');
+
+              case 2:
+                _context3.next = 4;
+                return _this3.$store.commit('SET_AUTHENTICATED', false);
+
+              case 4:
+                localStorage.removeItem('auth');
+
+                _this3.$router.push({
+                  name: 'login'
+                });
+
+                _this3.$swal.fire('Success!', 'You are Logout Successfully!', 'success');
+
+              case 7:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
       }))();
     }
   },
@@ -42353,95 +42396,127 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
-            _c(
-              "div",
-              { staticClass: "row d-flex justify-content-center mt-50 mb-50" },
-              _vm._l(_vm.products, function(product) {
-                return _c(
+            _vm.apiCallLoaded
+              ? _c(
                   "div",
-                  { key: product.id, staticClass: "col-md-4 mt-2" },
+                  {
+                    staticClass:
+                      "row  d-flex justify-content-center mt-50 mb-50"
+                  },
                   [
-                    _c("div", { staticClass: "card" }, [
-                      _c("div", { staticClass: "card-body" }, [
-                        _c("div", { staticClass: "card-img-actions" }, [
-                          _c("img", {
-                            staticClass: "card-img img-fluid",
-                            attrs: {
-                              src: product.image,
-                              width: "96",
-                              height: "350",
-                              alt: ""
-                            }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
+                    _vm._l(_vm.products, function(product) {
+                      return _c(
                         "div",
-                        { staticClass: "card-body bg-light text-center" },
+                        { key: product.id, staticClass: "col-md-4 mt-2" },
                         [
-                          _c("div", { staticClass: "mb-2" }, [
-                            _c(
-                              "h6",
-                              { staticClass: "font-weight-semibold mb-2" },
-                              [
-                                _c(
-                                  "a",
-                                  {
-                                    staticClass: "text-default mb-2",
-                                    attrs: {
-                                      href: product.slug,
-                                      "data-abc": "true"
-                                    }
+                          _c("div", { staticClass: "card" }, [
+                            _c("div", { staticClass: "card-body" }, [
+                              _c("div", { staticClass: "card-img-actions" }, [
+                                _c("img", {
+                                  staticClass: "card-img img-fluid",
+                                  staticStyle: {
+                                    "object-fit": "cover",
+                                    overflow: "hidden"
                                   },
-                                  [
-                                    _vm._v(
-                                      "\n                                            " +
-                                        _vm._s(product.title) +
-                                        "\n                                        "
-                                    )
-                                  ]
-                                )
-                              ]
-                            ),
+                                  attrs: {
+                                    src: product.image,
+                                    width: "96",
+                                    height: "350",
+                                    alt: ""
+                                  }
+                                })
+                              ])
+                            ]),
                             _vm._v(" "),
                             _c(
-                              "a",
-                              {
-                                staticClass: "text-muted",
-                                attrs: { href: "#", "data-abc": "true" }
-                              },
+                              "div",
+                              { staticClass: "card-body bg-light text-center" },
                               [
-                                _vm._v(
-                                  "\n                                            " +
-                                    _vm._s(product.category.name) +
-                                    "\n                                        "
-                                )
+                                _c("div", { staticClass: "mb-2" }, [
+                                  _c(
+                                    "h6",
+                                    {
+                                      staticClass: "font-weight-semibold mb-2"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          staticClass: "text-default mb-2",
+                                          attrs: {
+                                            href: product.slug,
+                                            "data-abc": "true"
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                            " +
+                                              _vm._s(product.title) +
+                                              "\n                                        "
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "text-muted",
+                                      attrs: { href: "#", "data-abc": "true" }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                            " +
+                                          _vm._s(product.category.name) +
+                                          "\n                                        "
+                                      )
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "h3",
+                                  { staticClass: "mb-0 font-weight-semibold" },
+                                  [_vm._v("$" + _vm._s(product.price))]
+                                ),
+                                _vm._v(" "),
+                                _vm._m(1, true),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "text-muted mb-3" }, [
+                                  _vm._v("34 reviews")
+                                ]),
+                                _vm._v(" "),
+                                _vm._m(2, true)
                               ]
                             )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "h3",
-                            { staticClass: "mb-0 font-weight-semibold" },
-                            [_vm._v("$" + _vm._s(product.price))]
-                          ),
-                          _vm._v(" "),
-                          _vm._m(1, true),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "text-muted mb-3" }, [
-                            _vm._v("34 reviews")
-                          ]),
-                          _vm._v(" "),
-                          _vm._m(2, true)
+                          ])
                         ]
                       )
-                    ])
-                  ]
+                    }),
+                    _vm._v(" "),
+                    _vm.apiCallLoaded
+                      ? _c("div", { staticClass: "text-center mt-5" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-warning",
+                              attrs: { disabled: !_vm.next_page_url },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.loadMoreProduct(_vm.next_page_url)
+                                }
+                              }
+                            },
+                            [_vm._v("Load More")]
+                          )
+                        ])
+                      : _vm._e()
+                  ],
+                  2
                 )
-              }),
-              0
-            )
+              : _vm._e()
           ])
         ])
       ])
