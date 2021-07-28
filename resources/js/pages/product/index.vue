@@ -9,6 +9,15 @@
                     </div>
 
                     <div class="card-body">
+                        <!-- search box -->
+                        <div class="search d-flex justify-content-between">
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group">
+                                    <input type="text" v-model="search" class="form-control" placeholder="Live Search">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end search -->
                         <table class="table">
                             <thead>
                                 <tr>
@@ -53,10 +62,12 @@
 </template>
 
 <script>
+import axios from 'axios';
     export default {
         data(){
             return {
                 products:[],
+                search:'',
             }
         },
         methods:{
@@ -92,6 +103,19 @@
                 });
                
             },
+            searchData(searchValue){
+                axios.get('/api/products/search/'+searchValue)
+                .then(response =>{
+                    this.products = response.data; //set api json data 
+                });
+            },
+
+        },
+        watch:{
+            search(){
+                this.searchData(this.search);
+                console.log(this.search);
+            }
         },
         mounted() {
             this.loadProducts();

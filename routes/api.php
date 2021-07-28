@@ -25,3 +25,5 @@ Route::middleware(['auth:sanctum'])->group(function(){
 });
 
 Route::get('/products',[PublicAPIController::class,'getProduct']);
+Route::get('/products/search/{search}',[PublicAPIController::class,'searchData']);
+Route::post('/products/clickSearch/{clickSearch}',[PublicAPIController::class,'clickSearch']);

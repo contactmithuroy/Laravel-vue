@@ -21,9 +21,10 @@
                     <div class="card-header">
                         <div class="content-head  d-flex justify-content-between">
                             <h4>Products of Mr {{user.name}}</h4>
+                            <!-- search box -->
                             <div class="search">
                                <div class="input-group">
-                                    <input type="text" class="form-control">
+                                    <input type="text" v-model="search" class="form-control" placeholder="Search">
                                     <span class="input-group-btn">
                                             <button type="button" class="btn btn-outline-primary">Go!</button>
                                     </span>
@@ -51,16 +52,16 @@
                                         </div>
                                         <h3 class="mb-0 font-weight-semibold">${{product.price}}</h3>
                                         <div> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> <i class="fa fa-star star"></i> </div>
-                                        <div class="text-muted mb-3">34 reviews</div> <button type="button" class="btn bg-cart"><i class="fa fa-cart-plus mr-2"></i> Add to cart</button>
+                                        <div class="text-muted mb-3">34 reviews</div> 
+                                        <button type="button" class="btn btn-success btn-sm bg-cart">View Details</button>
                                     </div>
                                 </div>
                             </div>
-                             <div v-if="apiCallLoaded" class="text-center mt-5">
-                                <button :disabled="!next_page_url" @click.prevent="loadMoreProduct(next_page_url)" class="btn btn-warning">Load More</button>
-                             </div>
                             <!-- end product -->
-
-                         </div>
+                        </div>
+                        <div v-if="apiCallLoaded" class="text-center mt-5">
+                            <button :disabled="!next_page_url" @click.prevent="loadMoreProduct(next_page_url)" class="btn btn-warning">Load More</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,6 +78,7 @@ export default {
             products:[],
             next_page_url:null,
             apiCallLoaded:false,
+            search:'',
         }
     },
     methods:{
@@ -106,7 +108,19 @@ export default {
                 'You are Logout Successfully!',
                 'success'
             ); 
-      }
+        },
+        searchData(searchValue){
+            axios.get('/api/products/search/'+searchValue)
+            .then(response =>{
+                this.products = response.data; //set api json data 
+            });
+        },
+    },
+    watch:{
+        search(){
+            this.searchData(this.search);
+            console.log(this.search);
+        }
     },
     computed:{
         massage(){
