@@ -46,11 +46,11 @@
                                     </div>
                                     <div class="col-md-10">
                                         <div class="form-group">
-                                            <label for="confirm_password">Confirm_password</label>
-                                            <input type="password" v-model="userForm.confirm_password" authocomplite="new-password" field="confirm_password"  :class="{'is-invalid': userForm.errors.has('confirm_password')}"  name="confirm_password" class="form-control" id="confirm_password"  placeholder="Enter confirm password">
+                                             <label for="password_confirmation">Password Confirmation</label>
+                                            <input type="password" v-model="userForm.password_confirmation" :class="{'is-invalid': userForm.errors.has('password_confirmation')}" name="password_confirmation" class="form-control" placeholder="Enter your confirm password">
                                         </div>
                                     </div>
-                                    
+                                 
                                 </div>
                                 <!-- /.card-body -->               
                                 <div class="card-footer">
@@ -74,7 +74,7 @@ export default {
                 name:'',
                 email:'',
                 password:'',
-                confirm_password:'',
+                password_confirmation:'',
             }),
         }
     },

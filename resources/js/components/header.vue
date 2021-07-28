@@ -12,6 +12,7 @@
         <router-link class="nav-item nav-link text-white" :to="{name:'category-list'}">Category</router-link>
         <router-link class="nav-item nav-link text-white" :to="{name:'product-list'}">Product</router-link>
         <router-link class="nav-item nav-link text-white" v-if="!auth" :to="{name:'login'}">Login</router-link>        
+        <router-link class="nav-item nav-link text-white" v-if="!auth" :to="{name:'signup'}">Signup</router-link>        
         </div>
     </div>
   </div>

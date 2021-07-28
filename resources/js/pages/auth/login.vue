@@ -21,7 +21,7 @@
                                     <input type="password" v-model="loginForm.password" :class="{'is-invalid': loginForm.errors.has('password')}" name="password" class="form-control" placeholder="Enter your password">
                                     <!-- <span :form="loginForm" field="password"></span> -->
                                 </div>
-                                
+                               
                                 <div class="form-group">
                                    <button type="submit" class="btn btn-success px-4">Login</button>
                                 </div>
@@ -48,27 +48,20 @@ export default {
        }     
     },
     methods:{
-        login(){
-            axios.get('/sanctum/csrf-cookie').then(response => {
-                this.loginForm.post('/login').then(response =>{
-                    console.log(response); 
-                    this.$router.push({name:'dashboard'});
-                     this.getUserData();
-
-                     
-                    this.$swal.fire(
-                    'Success!',
-                    'You are Login Successfully!',
-                    'success'
-                ); 
-
-                }); 
-            });
+        async login(){
+            await axios.get('/sanctum/csrf-cookie');
+            await this.loginForm.post('/login');
+            await this.getUserData();
+            this.$router.push({name:'dashboard'});          
+            this.$swal.fire(
+                'Success!',
+                'You are Login Successfully!',
+                'success'
+            ); 
         },
 
-        getUserData(){
-            axios.get('/api/user').then(response =>{
-                console.log(response.data);
+        async getUserData(){
+            await axios.get('/api/user').then(response =>{
                 let user = response.data;
                 this.$store.commit('SET_USER', user);
                 this.$store.commit('SET_AUTHENTICATED',true);

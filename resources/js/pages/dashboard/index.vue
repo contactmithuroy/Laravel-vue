@@ -33,20 +33,16 @@
 <script>
 export default {
     methods:{
-        logout(){
-        axios.post('/logout').then(response =>{
-          this.$router.push({name:'login'})
-          this.$store.commit('SET_AUTHENTICATED',false);
-          localStorage.removeItem('auth');
-
-          
-          console.log('success');
-          this.$swal.fire(
-                    'Success!',
-                    'You are Logout Successfully!',
-                    'success'
-                ); 
-        });
+        async logout(){
+            await axios.post('/logout');
+            await this.$store.commit('SET_AUTHENTICATED',false);
+            localStorage.removeItem('auth');
+            this.$router.push({name:'login'})
+            this.$swal.fire(
+                'Success!',
+                'You are Logout Successfully!',
+                'success'
+            ); 
       }
     },
     computed:{
