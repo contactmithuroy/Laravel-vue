@@ -1,0 +1,30 @@
+.card-img {
+    width: 350px
+}
+
+.star {
+    color: red
+}
+
+.bg-cart {
+    background-color: orange;
+    color: #fff
+}
+
+.bg-cart:hover {
+    color: #fff
+}
+
+.bg-buy {
+    background-color: green;
+    color: #fff;
+    padding-right: 29px
+}
+
+.bg-buy:hover {
+    color: #fff
+}
+
+a {
+    text-decoration: none !important
+}

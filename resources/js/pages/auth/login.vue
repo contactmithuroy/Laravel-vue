@@ -15,17 +15,14 @@
                                     <input type="text" v-model="loginForm.email" :class="{'is-invalid': loginForm.errors.has('email')}" name="email" class="form-control" placeholder="Enter your email">
                                     <!-- <span :form="loginForm" field="email"></span> -->
                                 </div>
-
                                 <div class="form-group">
                                      <label for="password">Password</label>
                                     <input type="password" v-model="loginForm.password" :class="{'is-invalid': loginForm.errors.has('password')}" name="password" class="form-control" placeholder="Enter your password">
                                     <!-- <span :form="loginForm" field="password"></span> -->
                                 </div>
-                               
                                 <div class="form-group">
-                                   <button type="submit" class="btn btn-success px-4">Login</button>
+                                   <button type="submit" :disabled="loginForm.busy"  class="btn btn-success px-4">Login</button>
                                 </div>
-
                             </form>
                         </div>
                     </div>
@@ -59,7 +56,6 @@ export default {
                 'success'
             ); 
         },
-
         async getUserData(){
             await axios.get('/api/user').then(response =>{
                 let user = response.data;
@@ -81,6 +77,4 @@ export default {
 <style>
 
 </style>
-
-
 <!--  --!>

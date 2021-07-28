@@ -30,7 +30,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                   <button type="submit" class="btn btn-success px-4">Signup</button>
+                                   <button type="submit" :disabled="signupForm.busy" class="btn btn-success px-4">Signup</button>
                                 </div>
 
                             </form>
@@ -61,22 +61,18 @@ export default {
             await axios.get('/sanctum/csrf-cookie');
             await this.signupForm.post('/register');
             await this.getUserData();
-       
+            this.$router.push({name:'dashboard'});
             this.$swal.fire(
                 'Success!',
                 'Your Acount has been Create Successfully!',
                 'success'
             ); 
-
-            this.$router.push({name:'dashboard'});
         },
-
         async getUserData(){
             await axios.get('/api/user').then(response =>{
                 let user = response.data;
                 this.$store.commit('SET_USER', user);
                 this.$store.commit('SET_AUTHENTICATED',true);
-
                 // set data on local storage
                 localStorage.setItem('auth',true);
             });

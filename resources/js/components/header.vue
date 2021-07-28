@@ -7,12 +7,17 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav ml-auto">
-        <router-link class="nav-item nav-link text-white" :to="{name:'home'}">Home <span class="sr-only">(current)</span></router-link>
-        <router-link class="nav-item nav-link text-white" v-if="auth" :to="{name:'dashboard'}">Dashboard</router-link>
-        <router-link class="nav-item nav-link text-white" :to="{name:'category-list'}">Category</router-link>
-        <router-link class="nav-item nav-link text-white" :to="{name:'product-list'}">Product</router-link>
-        <router-link class="nav-item nav-link text-white" v-if="!auth" :to="{name:'login'}">Login</router-link>        
-        <router-link class="nav-item nav-link text-white" v-if="!auth" :to="{name:'signup'}">Signup</router-link>        
+        <ul class="navbar-nav ml-auto" v-if="auth">
+          <li><router-link class="nav-item nav-link text-white" :to="{name:'home'}">Home <span class="sr-only">(current)</span></router-link></li>
+          <li><router-link class="nav-item nav-link text-white" v-if="auth" :to="{name:'dashboard'}">Dashboard</router-link></li>
+          <li><router-link class="nav-item nav-link text-white" :to="{name:'category-list'}">Category</router-link></li>
+          <li><router-link class="nav-item nav-link text-white" :to="{name:'product-list'}">Product</router-link></li>
+        </ul>
+        <ul class="navbar-nav ml-auto " v-else>
+          <li><router-link class="nav-item nav-link text-white" :to="{name:'login'}">Login</router-link>  </li>      
+          <li><router-link class="nav-item nav-link text-white" :to="{name:'signup'}">Signup</router-link> </li>       
+        </ul>
+       
         </div>
     </div>
   </div>
