@@ -26,7 +26,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 Vue.use(VueSweetalert2);
 
-
+Vue.component('pagination', require('laravel-vue-pagination'));
 Vue.component('app-header', require('./components/header.vue').default);
 
 //Nagivation Gard Authentication

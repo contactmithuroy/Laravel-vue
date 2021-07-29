@@ -7,7 +7,7 @@ use App\Models\Product;
 class PublicAPIController extends Controller
 {
     public function getProduct(){
-        $products = Product::with('category')->latest()->paginate(15);
+        $products = Product::with('category')->paginate(15);
         return response()->json($products,200);
     }
     public function searchData($search){ 

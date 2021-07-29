@@ -84,6 +84,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div v-if="apiCallLoaded" class="text-center mt-5">
+                            <button :disabled="!next_page_url" @click.prevent="loadMoreProduct(next_page_url)" class="btn btn-warning">Load More</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,6 +100,8 @@ import axios from 'axios';
         data(){
             return {
                 products:[],
+                next_page_url:null,
+                apiCallLoaded:false,
                 search:'',
                 sort_direction:'DESC',
                 sort_field:'created_at',
@@ -104,12 +109,21 @@ import axios from 'axios';
             }
         },
         methods:{
-            loadProducts(){
-                axios.get('/api/product')
-                .then(response =>{
-                    this.products = response.data;
-                });
-            },
+            async loadProduct(){
+            let {data} = await axios.get('/api/products'); // data load using api
+            console.log(data);
+            this.products = data.data; //api json data set
+            this.next_page_url = data.next_page_url; // this next_page_url is api url, see on consol data
+            this.apiCallLoaded = true; // if apiCallLoaded is true then product are lode
+        },
+            async loadMoreProduct(url){ //this parameter url valu is next_page_url valu 
+            let {data} = await axios.get(url);
+            let products = data.data; // new product value
+            products.forEach(element =>{
+                this.products.push(element); // new products data push on products array
+            });
+            this.next_page_url = data.next_page_url; // if have more next_page_url then set on 
+        },
             deleteProduct(product){
             this.$swal.fire({
                     title: 'Are you sure?',
@@ -175,7 +189,7 @@ import axios from 'axios';
             }
         },
         mounted() {
-            this.loadProducts();
+            this.loadProduct();
         }
     }
 </script>

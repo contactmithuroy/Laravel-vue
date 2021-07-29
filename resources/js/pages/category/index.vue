@@ -20,7 +20,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="category in categories" :key="category.id" >
+                                <tr v-for="category in categories.data" :key="category.id" >
                                     <td style="width:100px">{{category.id }}</td>
                                     <td>{{category.name }}</td>
                                     <td>{{category.slug }}</td>
@@ -36,6 +36,11 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="row mt-4">
+                            <div class="col-sm-6 offset-5">
+                               <pagination :data="categories" :limit="1" @pagination-change-page="loadCategories"></pagination>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -50,8 +55,8 @@
             }
         },
         methods:{
-            loadCategories(){
-                axios.get('/api/category')
+            loadCategories(page = 1){
+                axios.get('/api/category?page='+page)
                 .then(response =>{
                     this.categories = response.data;
                 });
