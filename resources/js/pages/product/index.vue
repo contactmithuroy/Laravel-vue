@@ -11,21 +11,51 @@
                     <div class="card-body">
                         <!-- search box -->
                         <div class="search d-flex justify-content-between">
+                             <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                <select v-model="takeProduct" @click.prevent="take_product()" name="" id="" class="form-control" >
+                                    <option value="" style="display: none" selected >Take</option>
+                                    <option value="10" >10 Products</option>
+                                    <option value="15" >15 Products</option>
+                                    <option  value="20" >20 Products</option>
+
+                                </select>
+                                </div>
+                            </div>
                             <div class="col-md-4 mb-3">
                                 <div class="input-group">
                                     <input type="text" v-model="search" class="form-control" placeholder="Live Search">
                                 </div>
                             </div>
+                            
                         </div>
                         <!-- end search -->
-                        <table class="table">
+                        <table class="table dataTable">
                             <thead>
                                 <tr>
-                                    <th style="width:100px">Id</th>
+                                    <th style="width:100px">
+                                        <a href="javascript:void(0)" @click.prevent="change_sort('id')" style="color:black; text-decoration: none; ">
+                                            Id
+                                        <span v-if="sort_direction == 'DESC' && sort_field == 'id' "> &uarr;</span>
+                                        <span v-if="sort_direction == 'ASC' && sort_field == 'id' " >&darr;</span>
+                                       </a>
+                                    </th>
                                     <th>Image</th>
-                                    <th style="max-width:200px">Title</th>
+                                    <th style="max-width:200px">
+                                       <a href="javascript:void(0)" @click.prevent="change_sort('title')" style="color:black; text-decoration: none;  font-weight: bold;">
+                                            Title
+                                        <span v-if="sort_direction == 'DESC' && sort_field == 'title' "> &uarr;</span>
+                                        <span v-if="sort_direction == 'ASC' && sort_field == 'title' " >&darr;</span>
+                                       </a>
+                                    </th>
                                     <th>User</th>
-                                    <th>Price</th>
+                                    <th>
+                                        <a href="javascript:void(0)" @click.prevent="change_sort('price')"  style="color:black; text-decoration: none; ">
+                                            Price
+                                        <span v-if="sort_direction == 'DESC' && sort_field == 'price' "> &uarr;</span>
+                                        <span v-if="sort_direction == 'ASC' && sort_field == 'price' " >&darr;</span>
+                                       </a>
+                                    </th>
                                     <th>Category</th>
                                     <th>Status</th>
                                     <th style="width:170px">Action</th>
@@ -68,6 +98,9 @@ import axios from 'axios';
             return {
                 products:[],
                 search:'',
+                sort_direction:'DESC',
+                sort_field:'created_at',
+                takeProduct:'',
             }
         },
         methods:{
@@ -109,6 +142,30 @@ import axios from 'axios';
                     this.products = response.data; //set api json data 
                 });
             },
+
+            change_sort(field){
+                if(this.sort_field == field){
+                    this.sort_direction = this.sort_direction == "ASC" ? "DESC" : "ASC";
+                }else{
+                    this.sort_field =field;
+                }
+                this.getResult();
+            },
+            take_product(take){
+                this.takeProduct = take;
+                this.getResult();
+            },
+            getResult(){
+                axios.get('/api/productby/sort?'
+                +"sort_direction="+this.sort_direction
+                +"&sort_field="+this.sort_field
+                +"&take="+this.takeProduct
+                
+                ).then(response =>{
+                    this.products = response.data;
+                });
+
+            }
 
         },
         watch:{

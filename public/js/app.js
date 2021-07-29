@@ -3294,12 +3294,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       products: [],
-      search: ''
+      search: '',
+      sort_direction: 'DESC',
+      sort_field: 'created_at',
+      takeProduct: ''
     };
   },
   methods: {
@@ -3340,6 +3373,26 @@ __webpack_require__.r(__webpack_exports__);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/products/search/' + searchValue).then(function (response) {
         _this3.products = response.data; //set api json data 
+      });
+    },
+    change_sort: function change_sort(field) {
+      if (this.sort_field == field) {
+        this.sort_direction = this.sort_direction == "ASC" ? "DESC" : "ASC";
+      } else {
+        this.sort_field = field;
+      }
+
+      this.getResult();
+    },
+    take_product: function take_product(take) {
+      this.takeProduct = take;
+      this.getResult();
+    },
+    getResult: function getResult() {
+      var _this4 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/productby/sort?' + "sort_direction=" + this.sort_direction + "&sort_field=" + this.sort_field + "&take=" + this.takeProduct).then(function (response) {
+        _this4.products = response.data;
       });
     }
   },
@@ -43897,6 +43950,67 @@ var render = function() {
               { staticClass: "search d-flex justify-content-between" },
               [
                 _c("div", { staticClass: "col-md-4 mb-3" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.takeProduct,
+                            expression: "takeProduct"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { name: "", id: "" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.take_product()
+                          },
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.takeProduct = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      [
+                        _c(
+                          "option",
+                          {
+                            staticStyle: { display: "none" },
+                            attrs: { value: "", selected: "" }
+                          },
+                          [_vm._v("Take")]
+                        ),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "10" } }, [
+                          _vm._v("10 Products")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "15" } }, [
+                          _vm._v("15 Products")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "20" } }, [
+                          _vm._v("20 Products")
+                        ])
+                      ]
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4 mb-3" }, [
                   _c("div", { staticClass: "input-group" }, [
                     _c("input", {
                       directives: [
@@ -43924,8 +44038,118 @@ var render = function() {
               ]
             ),
             _vm._v(" "),
-            _c("table", { staticClass: "table" }, [
-              _vm._m(0),
+            _c("table", { staticClass: "table dataTable" }, [
+              _c("thead", [
+                _c("tr", [
+                  _c("th", { staticStyle: { width: "100px" } }, [
+                    _c(
+                      "a",
+                      {
+                        staticStyle: {
+                          color: "black",
+                          "text-decoration": "none"
+                        },
+                        attrs: { href: "javascript:void(0)" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.change_sort("id")
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                                        Id\n                                    "
+                        ),
+                        _vm.sort_direction == "DESC" && _vm.sort_field == "id"
+                          ? _c("span", [_vm._v(" ↑")])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.sort_direction == "ASC" && _vm.sort_field == "id"
+                          ? _c("span", [_vm._v("↓")])
+                          : _vm._e()
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Image")]),
+                  _vm._v(" "),
+                  _c("th", { staticStyle: { "max-width": "200px" } }, [
+                    _c(
+                      "a",
+                      {
+                        staticStyle: {
+                          color: "black",
+                          "text-decoration": "none",
+                          "font-weight": "bold"
+                        },
+                        attrs: { href: "javascript:void(0)" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.change_sort("title")
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                                        Title\n                                    "
+                        ),
+                        _vm.sort_direction == "DESC" &&
+                        _vm.sort_field == "title"
+                          ? _c("span", [_vm._v(" ↑")])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.sort_direction == "ASC" && _vm.sort_field == "title"
+                          ? _c("span", [_vm._v("↓")])
+                          : _vm._e()
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("User")]),
+                  _vm._v(" "),
+                  _c("th", [
+                    _c(
+                      "a",
+                      {
+                        staticStyle: {
+                          color: "black",
+                          "text-decoration": "none"
+                        },
+                        attrs: { href: "javascript:void(0)" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.change_sort("price")
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                                        Price\n                                    "
+                        ),
+                        _vm.sort_direction == "DESC" &&
+                        _vm.sort_field == "price"
+                          ? _c("span", [_vm._v(" ↑")])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.sort_direction == "ASC" && _vm.sort_field == "price"
+                          ? _c("span", [_vm._v("↓")])
+                          : _vm._e()
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Category")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Status")]),
+                  _vm._v(" "),
+                  _c("th", { staticStyle: { width: "170px" } }, [
+                    _vm._v("Action")
+                  ])
+                ])
+              ]),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -44018,32 +44242,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { staticStyle: { width: "100px" } }, [_vm._v("Id")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Image")]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { "max-width": "200px" } }, [_vm._v("Title")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("User")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Price")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Category")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Status")]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { width: "170px" } }, [_vm._v("Action")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
